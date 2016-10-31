@@ -52,6 +52,6 @@ IDENTIFIER
 |
 '(' expression ')';
 OP : ( '&&' | '<' | '+' | '-' | '*' );
-IDENTIFIER : [a-zA-Z0-9_]+;
+IDENTIFIER : [a-zA-Z]([a-zA-Z]|[0-9]|['_'])*;
 INTEGER_LITERAL : [0-9]+;
 WS : [' \r\n\t']+ -> skip;

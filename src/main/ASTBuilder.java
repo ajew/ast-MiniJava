@@ -26,16 +26,15 @@ public class ASTBuilder {
 	}
 	
 	private ClassDeclList visitClassDeclList(List<ClassDeclarationContext> ctx) {
-		ClassDeclList classDeclList = new ClassDeclList();
-		
-		for (ClassDeclarationContext c : ctx) {
-			if(c.IDENTIFIER().size() < 1){
-				classDeclList.addElement(this.visiClassDeclExtends(c));
-			} else {
-				classDeclList.addElement(this.visitClassDecl(c));
+		ClassDeclList classDecList = new ClassDeclList();
+		for (ClassDeclarationContext c : ctx){
+			if(c.IDENTIFIER().size() > 1) classDecList.addElement(this.visiClassDeclExtends(c));
+			else {
+				classDecList.addElement(this.visitClassDecl(c));
 			}
 		}
-		return classDeclList;
+		
+		return classDecList;
 	}
 	
 	private ClassDecl visiClassDeclExtends(ClassDeclarationContext ctx) {
@@ -93,23 +92,24 @@ public class ASTBuilder {
 			case "*" : return new Times(exp1,exp2);
 			}
 		
-		}else if(text.contains("!")){
+		}else if(literal != null){
+			return new IntegerLiteral(Integer.parseInt(literal.getText()));
+		}
+		else if(text.startsWith("!")){
 			return new Not(this.visitExp(ctx.expression().get(0)));
 		}else if(ctx.expression().size() >= 1 && ids != null){
 			return new Call(this.visitExp(ctx.expression().get(0)),
 					new Identifier(ids.getText()), this.visitExpList(ctx.expression().subList(1, ctx.expression().size())));
-		} else if (ctx.getText().contains("true")){
+		} else if (ctx.getText().startsWith("true")){
 			return new True();
-		}else if(ctx.getText().contains("false")){
+		}else if(ctx.getText().startsWith("false")){
 			return new False();
-		}else if(ctx.getText().contains("this")){
+		}else if(ctx.getText().startsWith("this")){
 			return new This();
 		}else if(ctx.expression().size() == 2){
 			return new ArrayLookup(this.visitExp(ctx.expression().get(0)),this.visitExp(ctx.expression().get(1)));
-		}else if(ctx.expression().size() == 1 && !text.contains("new")){
+		}else if(ctx.expression().size() == 1 && !text.startsWith("new") && text.contains("length")){
 			return new ArrayLength(this.visitExp(ctx.expression().get(0)));
-		}else if(literal != null){
-			return new IntegerLiteral(Integer.parseInt(literal.getText()));
 		}else if(ids != null && !text.contains("new")){
 			return new IdentifierExp(ids.getText());
 		}else if(text.contains("new")){

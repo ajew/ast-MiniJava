@@ -1,12 +1,14 @@
 package main;
 
 import java.io.FileInputStream;
+
 import java.io.IOException;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import ast.*;
+import symboltable.SymbolTable;
 import visitor.*;
 
 public class Main {
@@ -21,9 +23,12 @@ public class Main {
         
         ASTBuilder builder = new ASTBuilder();
         
-        
-        Program prog = builder.visitGoal(parser.goal());;
-        PrettyPrintVisitor visitor = new PrettyPrintVisitor();
-        prog.accept(visitor);
+        Program prog = builder.visitGoal(parser.goal());
+        //PrettyPrintVisitor visitor = new PrettyPrintVisitor();
+        //prog.accept(visitor);
+        BuildSymbolTableVisitor visitorB = new BuildSymbolTableVisitor();
+        prog.accept(visitorB);
+        //SymbolTable t = visitorB.getSymbolTable();
+        prog.accept(new TypeCheckVisitor(visitorB.getSymbolTable()));
 	}
 }

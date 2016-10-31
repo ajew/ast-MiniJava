@@ -4,13 +4,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import ast.ClassDeclList;
 import ast.Type;
 
 public class Method {
 
 	String id;
 	Type type;
-	Vector<Variable> params;
+	public Vector<Variable> params;
 	Hashtable<Object, Variable> vars;
 
 	public Method(String id, Type type) {
@@ -83,5 +84,15 @@ public class Method {
 
 		return null;
 	}
+	
+	public Vector<Variable> params () {
+		return params;
+	}
+	
+	public Hashtable<Object, Variable> vars() {
+		return vars;
+	}
+
+	
 
 } // Method

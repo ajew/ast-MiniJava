@@ -80,4 +80,12 @@ public class Class {
 	public String parent() {
 		return parent;
 	}
+	
+	public Hashtable<Object, Method> methods() {
+		return methods;
+	}
+	
+	public Hashtable<Object, Variable> globals() {
+		return globals;
+	}
 } // Class
